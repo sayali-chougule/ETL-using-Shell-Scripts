@@ -243,3 +243,15 @@ Replace the cut command at end of the script with the following command
 ```sh
 cut -d":" -f1,3,6 /etc/passwd > extracted-data.txt
 ```
+
+9. Run the script
+
+```sh
+bash csv2db.sh
+```
+
+10. Run the command below to verify that the file ```extracted-data.txt``` is created, and has the content.
+
+```sh
+cat extracted-data.txt
+```

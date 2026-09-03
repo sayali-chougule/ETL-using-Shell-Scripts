@@ -16,4 +16,4 @@ echo "Extracting data"
 
 # cut -d":" -f1,3,6 passwd
 
-cut -d":" -f1,3,6 /etc/passwd > extracted-data.txt
+cut -d":" -f1,3,6 passwd > extracted-data.txt
