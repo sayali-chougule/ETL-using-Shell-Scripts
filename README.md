@@ -255,3 +255,97 @@ bash csv2db.sh
 ```sh
 cat extracted-data.txt
 ```
+
+11. The extracted columns are separated by the original ":" delimiter. You need to convert this into a "," delimited file. Add the below lines at the end of the script and save the file
+
+```sh
+# Transform phase
+echo "Transforming data"
+# read the extracted data and replace the colons with commas.
+
+tr ":" "," < extracted-data.txt  > transformed-data.csv
+```
+
+12. Run the script
+
+```sh
+bash csv2db.sh
+```
+
+13. Run the command below to verify that the file ```transformed-data.csv``` is created, and has the content
+
+```sh
+cat transformed-data.csv
+```
+
+14. To load data from a shell script, you will use the ```psql``` client utility in a non-interactive manner. This is done by sending the database commands through a command pipeline to ```psql``` with the help of ```echo``` command
+
+PostgreSQL command to copy data from a CSV file to a table is ```COPY```
+
+The basic structure of the command which we will use in our script is,
+
+```sh
+COPY table_name FROM 'filename' DELIMITERS 'delimiter_character' FORMAT;
+```
+
+Now, add the lines below to the end of the script 'csv2db.sh' and save the file
+
+```sh
+# Load phase
+echo "Loading data"
+# Set the PostgreSQL password environment variable.
+# Replace <yourpassword> with your actual PostgreSQL password.
+export PGPASSWORD=<yourpassword>;
+# Send the instructions to connect to 'template1' and
+# copy the file to the table 'users' through command pipeline.
+echo "\c template1;\COPY users  FROM '/home/project/transformed-data.csv' DELIMITERS ',' CSV;" | psql --username=postgres --host=postgres
+```
+
+## 4. Execute the final script
+
+1. Run the script.
+
+```sh
+bash csv2db.sh
+```
+**Output**
+
+```
+Extracting data
+Transforming data
+Loading data
+You are now connected to database "template1" as user "postgres".
+COPY 27
+```
+
+2. Now, add the line below to the end of the script 'csv2db.sh' and save the file
+
+```sh
+echo "SELECT * FROM users;" | psql --username=postgres --host=postgres template1
+```
+
+3. Run the script to verify that the table users is populated with the data.
+
+```sh
+bash csv2db.sh
+```
+
+**Output**
+
+```
+username     | userid |   homedirectory    
+------------------+--------+--------------------
+ root             |      0 | /root
+ daemon           |      1 | /usr/sbin
+ bin              |      2 | /bin
+ sys              |      3 | /dev
+ sync             |      4 | /bin
+ games            |      5 | /usr/games
+ man              |      6 | /var/cache/man
+ lp               |      7 | /var/spool/lpd
+ mail             |      8 | /var/mail
+ news             |      9 | /var/spool/news
+ uucp             |     10 | /var/spool/uucp
+ proxy            |     13 | /bin
+
+```

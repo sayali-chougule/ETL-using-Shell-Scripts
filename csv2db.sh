@@ -17,3 +17,20 @@ echo "Extracting data"
 # cut -d":" -f1,3,6 passwd
 
 cut -d":" -f1,3,6 passwd > extracted-data.txt
+
+# Transform phase
+echo "Transforming data"
+# read the extracted data and replace the colons with commas.
+
+tr ":" "," < extracted-data.txt  > transformed-data.csv
+
+# Load phase
+echo "Loading data"
+# Set the PostgreSQL password environment variable.
+# Replace <yourpassword> with your actual PostgreSQL password.
+export PGPASSWORD=<yourpassword>;
+# Send the instructions to connect to 'template1' and
+# copy the file to the table 'users' through command pipeline.
+echo "\c template1;\COPY users  FROM '/home/project/transformed-data.csv' DELIMITERS ',' CSV;" | psql --username=postgres --host=postgres
+
+echo "SELECT * FROM users;" | psql --username=postgres --host=postgres template1
