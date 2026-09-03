@@ -301,7 +301,7 @@ export PGPASSWORD=<yourpassword>;
 echo "\c template1;\COPY users  FROM '/home/project/transformed-data.csv' DELIMITERS ',' CSV;" | psql --username=postgres --host=postgres
 ```
 
-## 4. Execute the final script
+# 4. Execute the final script
 
 1. Run the script.
 
