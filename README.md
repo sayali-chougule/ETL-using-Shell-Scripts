@@ -178,7 +178,7 @@ echo "My login pin is 5634" | tr -d "[:digit:]"
 My login pin is
 ```
 
-## 3. Loading data into a PostgreSQL table
+# 3. Loading data into a PostgreSQL table
 
 - The PostgreSQL database will have the users table with following columns:
 
